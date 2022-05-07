@@ -1,4 +1,4 @@
-# rei-latest-outlet
+# rei-latest-outlet-scraper
 
 Script to constantly run and scrape the "New Arrivals" section of REI Outlet for new items and price changes and persist the data to a locally ran database.
 Incase the website has bot prevention, products are loaded one page at a time at a random interval between 1 and 3 minutes.
