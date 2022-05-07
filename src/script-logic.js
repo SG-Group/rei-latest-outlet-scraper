@@ -14,7 +14,7 @@ const startScraping = async () => {
     }
     await saveItems(items);
     pageNumber++;
-    await timeout(Math.floor(Math.random() * 3 + 1 * 60000));
+    await timeout(Math.floor(Math.random() * 3 + 1) * 60000);
   }
 };
 
