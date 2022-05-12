@@ -7,12 +7,12 @@ const sequelize = new Sequelize({
 });
 
 const DB = sequelize.define("Items", {
-  upc: DataTypes.STRING,
+  sku: DataTypes.STRING,
   productId: DataTypes.STRING,
   name: DataTypes.STRING,
   price: DataTypes.REAL,
   lastUpdatedPrice: DataTypes.REAL,
-  originalPrice: DataTypes.REAL,
+  oldPrice: DataTypes.REAL,
   discount: DataTypes.NUMBER,
   url: DataTypes.STRING,
   img: DataTypes.STRING,
@@ -51,11 +51,11 @@ const proccessItemsData = (data) => {
   for (let item of data) {
     for (let theme of item.availableColors) {
       formattedItemsList.push({
-        upc: theme.sku,
+        sku: theme.sku,
         productId: item.prodId,
         name: item.cleanTitle,
         price: item.displayPrice.max,
-        originalPrice: Number(item.regularPrice),
+        oldPrice: Number(item.regularPrice),
         discount: Number(item.percentageOff),
         url: `https://rei.com${item.link}`,
         img: `https://rei.com${
@@ -76,7 +76,7 @@ const proccessItemsData = (data) => {
 export const saveItems = async (items) => {
   const formattedItems = proccessItemsData(items);
   for (let item of formattedItems) {
-    let itemAlreadyExists = await DB.findOne({ where: { upc: item.upc } });
+    let itemAlreadyExists = await DB.findOne({ where: { sku: item.sku } });
     if (itemAlreadyExists && itemAlreadyExists.price !== item.price) {
       /**
        * Updates item if it already exists in db and
@@ -84,12 +84,12 @@ export const saveItems = async (items) => {
        */
       await itemAlreadyExists
         .update({
-          upc: item.upc,
+          sku: item.sku,
           productId: item.productId,
           name: item.name,
           price: item.price,
           lastUpdatedPrice: itemAlreadyExists.price,
-          originalPrice: item.originalPrice,
+          oldPrice: item.oldPrice,
           discount: item.discount,
           url: item.url,
           img: item.img,
